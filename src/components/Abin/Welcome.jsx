@@ -2,8 +2,10 @@ import React from 'react';
 import Logins from './Logins';
 import { BiUserCircle } from "react-icons/bi";
 import { Building2 } from "lucide-react";
+import { useNavigate } from 'react-router-dom';
 
 export default function Welcome({ onSelectRole }) {
+   const navigate = useNavigate();
 
   const roleCardsData = [
     {
@@ -85,6 +87,7 @@ export default function Welcome({ onSelectRole }) {
         </div>
       ),
     },
+
   ];
 
   return (
@@ -127,7 +130,13 @@ export default function Welcome({ onSelectRole }) {
               description={card.description}
               buttonText={card.buttonText}
               buttonColorClass={card.buttonColorClass}
-              onCardClick={() => onSelectRole(card.id)}
+              onCardClick={() => {
+              if (card.id === "user") {
+                 navigate("/login");
+               } else {
+              onSelectRole && onSelectRole(card.id);
+  }
+}}
             />
           ))}
         </div>
