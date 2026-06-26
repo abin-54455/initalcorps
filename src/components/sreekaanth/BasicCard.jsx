@@ -60,7 +60,7 @@ const BasicCard = ({ title, subtitle, price, duration, features, popular }) => {
       <hr className="border-slate-200 my-5" />
 
       <div>
-        <h2 className="text-3xl font-extrabold text-amber-500">{price}</h2>
+        <h2 className="text-3xl font-bold text-amber-500">{price}</h2>
         <p className="flex items-center gap-1 text-xs text-slate-400 mt-1.5">
           <Clock size={13} /> {duration}
         </p>

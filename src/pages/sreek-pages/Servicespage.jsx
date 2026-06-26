@@ -5,14 +5,16 @@ import { Briefcase, Crown } from "lucide-react";
 import BasicServices from "./BasicServices";
 import PremiumServices from "./PremiumServices";
 import ServiceDetail from "./ServiceDetail";
-import CurrentStartups from "../../components/sreekaanth/CurrentStartups";
-import ArticleCards from "../../components/sreekaanth/ArticleCards";
-import DealsDiscounts from "../../components/sreekaanth/DealsDiscounts";
+import CurrentStartups  from "../../components/sreekaanth/CurrentStartups";
+import ArticleCards     from "../../components/sreekaanth/ArticleCards";
+import DealsDiscounts   from "../../components/sreekaanth/DealsDiscounts";
+import Testimonials     from "../../components/sreekaanth/Testimonials";
+import Footer           from "../../components/sreekaanth/Footer";
 
 // Import your landing sections
-import AboutUs from "../../components/geethika/AboutUs";
-import AboutCard from "../../components/geethika/AboutCard";
-import Mission from "../../components/geethika/Mission";
+import AboutUs       from "../../components/geethika/AboutUs";
+import AboutCard     from "../../components/geethika/AboutCard";
+import Mission       from "../../components/geethika/Mission";
 import UserDashboard from "../../components/geethika/UserDashboard";
 
 export default function ServicesPage() {
@@ -22,12 +24,30 @@ export default function ServicesPage() {
       {/* ── Sticky Header Navigation (From UserDashboard) ── */}
       <UserDashboard />
 
+      {/* ── About Us & Mission Sections ── */}
+      <div className="px-4 pb-12 pt-4 sm:px-6 lg:px-10">
+        <div className="max-w-6xl mx-auto">
+          {/* Mockup Section 1: Intro Text Block */}
+          <AboutUs />
+
+          {/* Mockup Section 2: Four Column Feature Badges */}
+          <div className="mt-8">
+            <AboutCard />
+          </div>
+
+          {/* Mockup Section 3: Company Mission & Metrics Card */}
+          <Mission />
+        </div>
+      </div>
+
+      <hr className="border-slate-200 my-8" />
+
       {/* ── Main Layout Container ── */}
-      <div className="px-4 py-8 sm:px-6 sm:py-10 lg:px-10">
+      <div id="services-section" className="px-4 py-8 sm:px-6 sm:py-10 lg:px-10">
         <div className="max-w-7xl mx-auto">
 
           {/* Header & Plan Toggle Section */}
-          <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-6 mb-10 lg:mb-12">
+          <div id="pricing-section" className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-6 mb-10 lg:mb-12">
             <div>
               <span className="inline-flex items-center gap-2.5 pl-3.5 pr-4 py-2 rounded-full bg-gray-200 border border-slate-300 text-xs">
                 <Briefcase size={15} className="text-slate-500" />
@@ -37,7 +57,7 @@ export default function ServicesPage() {
                 </span>
               </span>
 
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black mt-4 text-slate-900">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black mt-4 text-black-700">
                 Services We Offer
               </h1>
 
@@ -82,33 +102,15 @@ export default function ServicesPage() {
             </div>
           </div>
 
-          {/* ── About Us & Mission Sections (Matches layout in WhatsApp Image 2026-06-25 at 10.10.37 PM_2.jpeg) ── */}
-          <div className="px-4 pb-12 pt-4 sm:px-6 lg:px-10">
-            <div className="max-w-6xl mx-auto">
-              {/* Mockup Section 1: Intro Text Block */}
-              <AboutUs />
-
-              {/* Mockup Section 2: Four Column Feature Badges */}
-              <div className="mt-8">
-                <AboutCard />
-              </div>
-
-              {/* Mockup Section 3: Company Mission & Metrics Card */}
-              <Mission />
-            </div>
-          </div>
-
-          <hr className="border-slate-200 my-8" />
-
           {/* ── Dynamic Routes & Pricing Layout Content ── */}
           <div className="px-4 py-4 max-w-7xl mx-auto">
             <Routes>
-              <Route path="/" element={<Navigate to="/basic" replace />} />
-              <Route path="/basic" element={<BasicServices />} />
-              <Route path="/basic/:slug" element={<ServiceDetail plan="basic" />} />
-              <Route path="/premium" element={<PremiumServices />} />
+              <Route path="/"              element={<Navigate to="/basic" replace />} />
+              <Route path="/basic"         element={<BasicServices />} />
+              <Route path="/basic/:slug"   element={<ServiceDetail plan="basic" />} />
+              <Route path="/premium"       element={<PremiumServices />} />
               <Route path="/premium/:slug" element={<ServiceDetail plan="premium" />} />
-              <Route path="*" element={<Navigate to="/basic" replace />} />
+              <Route path="*"              element={<Navigate to="/basic" replace />} />
             </Routes>
 
             <div className="mt-12">
@@ -116,12 +118,28 @@ export default function ServicesPage() {
             </div>
           </div>
 
-          {/* ── Full-width Bottom Sections ── */}
-          <ArticleCards />
-          <DealsDiscounts />
-
         </div>
       </div>
+
+      {/* ── Full-width continuous dark section (ArticleCards + DealsDiscounts share same bg) ── */}
+      {/* 64-65 · ArticleCards */}
+      <div id="articles-section">
+        <ArticleCards />
+
+        {/* 69-70 · DealsDiscounts */}
+        <DealsDiscounts />
+      </div>
+
+      {/* ── Light section · Testimonials (71-72) ── */}
+      <div id="testimonials-section">
+        <Testimonials />
+      </div>
+
+      {/* ── Footer (73) ── */}
+      <div id="footer-section">
+        <Footer />
+      </div>
+
     </div>
   );
 }

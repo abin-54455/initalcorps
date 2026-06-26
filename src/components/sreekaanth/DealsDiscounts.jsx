@@ -29,11 +29,15 @@ const deals = [
 const CSS = `
   .dd-section {
     width: 100%;
-    background: linear-gradient(160deg, #0d1f3c 0%, #0a1628 60%, #081220 100%);
-    padding: 64px 40px 72px;
+    background: #0a1628;
+    padding: 0 40px 72px;
     box-sizing: border-box;
   }
-  .dd-inner { max-width: 1200px; margin: 0 auto; }
+  .dd-inner {
+    max-width: 1200px; margin: 0 auto;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    padding-top: 64px;
+  }
   .dd-header { text-align: center; margin-bottom: 44px; }
   .dd-eyebrow {
     display: inline-flex; align-items: center; gap: 7px;
@@ -58,11 +62,13 @@ const CSS = `
   }
 
   @media (max-width: 1024px) {
-    .dd-section { padding: 48px 28px 56px; }
+    .dd-section { padding: 0 28px 56px; }
+    .dd-inner { padding-top: 48px; }
     .dd-grid { grid-template-columns: repeat(2, 1fr); }
   }
   @media (max-width: 640px) {
-    .dd-section { padding: 40px 16px 48px; }
+    .dd-section { padding: 0 16px 48px; }
+    .dd-inner { padding-top: 40px; }
     .dd-grid { grid-template-columns: 1fr; gap: 14px; }
     .dd-title { font-size: 24px; }
     .dd-subtitle { font-size: 13px; }

@@ -54,11 +54,11 @@ const articles = [
 const CSS = `
   .ac-section {
     width: 100%;
-    background: linear-gradient(160deg, #0d1f3c 0%, #0a1628 50%, #081220 100%);
-    padding: 64px 40px 72px;
+    background: #0a1628;
+    padding: 64px 40px 0;
     box-sizing: border-box;
   }
-  .ac-inner { max-width: 1200px; margin: 0 auto; }
+  .ac-inner { max-width: 1200px; margin: 0 auto; padding-bottom: 64px; }
   .ac-header { text-align: center; margin-bottom: 40px; }
   .ac-eyebrow {
     display: inline-flex; align-items: center; gap: 7px;
@@ -73,11 +73,13 @@ const CSS = `
   .ac-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
 
   @media (max-width: 1024px) {
-    .ac-section { padding: 48px 28px 56px; }
+    .ac-section { padding: 48px 28px 0; }
+    .ac-inner { padding-bottom: 48px; }
     .ac-grid { grid-template-columns: repeat(2, 1fr); }
   }
   @media (max-width: 640px) {
-    .ac-section { padding: 40px 16px 48px; }
+    .ac-section { padding: 40px 16px 0; }
+    .ac-inner { padding-bottom: 40px; }
     .ac-grid { grid-template-columns: 1fr; gap: 12px; }
     .ac-title { font-size: 24px; }
     .ac-subtitle { font-size: 13px; }
