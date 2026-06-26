@@ -1,100 +1,75 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Plus } from 'lucide-react';
 import IndividualArticleCard from './IndividualArticles';
 import AddArticles from './AddArticles';
 import EditArticle from './EditArticels';
 
 const ManageArticles = () => {
-  // 1. Reactive state array initializing default dashboard items
-  const [articlesData, setArticlesData] = useState([
-    {
-      id: 1,
-      title: 'Complete Guide to Company Incorporation in India',
-      summary: 'Everything you need to know about registering a Private Limited Company, LLP, or OPC in India - from documentation to timelines.',
-      category: 'incorporation',
-      readTime: '5 min read',
-      excerpt: 'Everything you need to know about registering a Private Limited Company, LLP, or OPC in India - from documentation to timelines.',
-      contentHtml: '<h2>Complete Guide to Company Incorporation in India</h2><p>Overview content...</p>'
-    },
-    {
-      id: 2,
-      title: 'Why Your Startup Needs Trademark Protection',
-      summary: 'Learn how trademark registration safeguards your brand identity and prevents infringement in the competitive Indian market.',
-      category: 'licensing',
-      readTime: '4 min read',
-      excerpt: 'Learn how trademark registration safeguards your brand identity and prevents infringement in the competitive Indian market.',
-      contentHtml: '<h2>Why Your Startup Needs Trademark Protection</h2><p>Overview content...</p>'
-    },
-    {
-      id: 3,
-      title: 'ISO Certification: Benefits for Indian Businesses',
-      summary: 'Discover how ISO 9001, 14001, and 27001 certifications can boost credibility, improve operations, and open new market opportunities.',
-      category: 'certification',
-      readTime: '6 min read',
-      excerpt: 'Discover how ISO 9001, 14001, and 27001 certifications can boost credibility, improve operations, and open new market opportunities.',
-      contentHtml: '<h2>ISO Certification: Benefits for Indian Businesses</h2><p>Overview content...</p>'
-    },
-    {
-      id: 4,
-      title: 'GST Compliance Checklist for Small Businesses',
-      summary: 'A comprehensive checklist to ensure your business stays GST-compliant and avoids penalties from tax authorities.',
-      category: 'compliance',
-      readTime: '8 min read',
-      excerpt: 'A comprehensive checklist to ensure your business stays GST-compliant and avoids penalties from tax authorities.',
-      contentHtml: '<h2>GST Compliance Checklist for Small Businesses</h2><p>Overview content...</p>'
-    }
-  ]);
-
-  // 2. State view routing managers
+  const [articlesData, setArticlesData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false);
   const [editingArticle, setEditingArticle] = useState(null);
 
-  // Trigger add component form view
+  // Fetch all articles from backend on lifecycle mount
+  const fetchArticles = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/api/articles");
+      if (!response.ok) throw new Error("Failed to fetch articles");
+      const data = await response.json();
+      setArticlesData(data);
+    } catch (error) {
+      console.error("Error loading articles:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchArticles();
+  }, []);
+
   const handleAddArticleClick = () => {
     setIsAdding(true);
     setEditingArticle(null); 
   };
 
-  // Trigger editor form component view and populate context
   const handleEditArticleClick = (articleObj) => {
     setEditingArticle(articleObj);
     setIsAdding(false);
   };
 
-  // Delete handler - updates state array reactively
-  const handleDeleteArticleClick = (id) => {
+  // Connected Database Delete Pipeline Trigger
+  const handleDeleteArticleClick = async (id) => {
     const confirmation = window.confirm("Are you sure you want to permanently delete this article?");
-    if (confirmation) {
-      setArticlesData((prevArticles) => prevArticles.filter(item => item.id !== id));
+    if (!confirmation) return;
+
+    try {
+      const response = await fetch(`http://localhost:5000/api/articles/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) throw new Error("Failed to eliminate server document");
+
+      // Reactively wipe element out of operational view using Mongoose _id
+      setArticlesData((prevArticles) => prevArticles.filter(item => item._id !== id));
+    } catch (error) {
+      console.error("Delete Error:", error);
+      alert("Failed to delete article");
     }
   };
 
-  // Save pipeline when creating new submissions from AddArticles.jsx
-  const handleSaveNewArticle = (formFields) => {
-    const newArticleObj = {
-      id: Date.now(), // Generate numerical sequence timestamp fallback as temporary ID
-      title: formFields.title,
-      summary: formFields.excerpt, // Bind excerpt input parameter straight to listing summary presentation
-      category: formFields.category,
-      readTime: formFields.readTime,
-      excerpt: formFields.excerpt,
-      contentHtml: formFields.contentHtml
-    };
-
+  // State sync pipeline executed after successful validation inside AddArticles component
+  const handleSaveNewArticle = (newArticleObj) => {
     setArticlesData((prevArticles) => [newArticleObj, ...prevArticles]);
-    setIsAdding(false); // Return dashboard back to general card lists overview
+    setIsAdding(false); 
   };
 
-  // Update pipeline when pushing changes from EditArticle.jsx
+  // State sync pipeline executed after successful modification inside EditArticle component
   const handleUpdateExistingArticle = (updatedFields) => {
     setArticlesData((prevArticles) =>
-      prevArticles.map((item) =>
-        item.id === updatedFields.id
-          ? { ...updatedFields, summary: updatedFields.excerpt } // Ensure description fields match up seamlessly
-          : item
-      )
+      prevArticles.map((item) => item._id === updatedFields._id ? updatedFields : item)
     );
-    setEditingArticle(null); // Return dashboard back to general card lists overview
+    setEditingArticle(null); 
   };
 
   return (
@@ -104,7 +79,6 @@ const ManageArticles = () => {
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl md:text-2xl font-bold text-[#0f172a]">Manage Articles</h2>
         
-        {/* Render "Add Article" button only if user is in lists overview workspace view */}
         {!isAdding && !editingArticle && (
           <button 
             onClick={handleAddArticleClick}
@@ -116,10 +90,10 @@ const ManageArticles = () => {
         )}
       </div>
 
-      {/* Dynamic Conditional Rendering Switch Workspace Matrix Block */}
+      {/* Dynamic Swapping Matrix Views */}
       {isAdding && (
         <AddArticles 
-          onSubmit={handleSaveNewArticle} 
+          onSuccess={handleSaveNewArticle} 
           onCancel={() => setIsAdding(false)} 
         />
       )}
@@ -134,14 +108,20 @@ const ManageArticles = () => {
 
       {!isAdding && !editingArticle && (
         <div className="space-y-4">
-          {articlesData.map((article) => (
-            <IndividualArticleCard 
-              key={article.id} 
-              article={article} 
-              onEdit={() => handleEditArticleClick(article)} // Pass down full item object to store into editor state context
-              onDelete={() => handleDeleteArticleClick(article.id)}
-            />
-          ))}
+          {loading ? (
+            <p className="text-slate-400 font-medium text-center text-sm py-4">Loading articles dashboard...</p>
+          ) : articlesData.length === 0 ? (
+            <p className="text-slate-400 font-medium text-center text-sm py-4">No documents discovered. Click 'Add Article' to publish a new text item.</p>
+          ) : (
+            articlesData.map((article) => (
+              <IndividualArticleCard 
+                key={article._id} 
+                article={article} 
+                onEdit={() => handleEditArticleClick(article)} 
+                onDelete={() => handleDeleteArticleClick(article._id)}
+              />
+            ))
+          )}
         </div>
       )}
       
