@@ -110,7 +110,7 @@ export default function UserDashboard() {
             👤 Dashboard
           </button>
           <button
-            onClick={() => navigate("/login")}
+            onClick={() => navigate("/Welcomepage")}
             style={{ background: "#0f172a", border: "none", padding: "8px 16px", borderRadius: "6px", fontSize: "13px", fontWeight: "600", color: "#ffffff", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px" }}
           >
             🚪 Logout
