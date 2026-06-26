@@ -5,7 +5,7 @@ import { Building2 } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 
 export default function Welcome({ onSelectRole }) {
-   const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const roleCardsData = [
     {
@@ -37,7 +37,6 @@ export default function Welcome({ onSelectRole }) {
         </div>
       ),
     },
-
     {
       id: 'executive',
       hoverTheme: 'executive',
@@ -68,7 +67,6 @@ export default function Welcome({ onSelectRole }) {
         </div>
       ),
     },
-
     {
       id: 'user',
       hoverTheme: 'user',
@@ -87,19 +85,15 @@ export default function Welcome({ onSelectRole }) {
         </div>
       ),
     },
-
   ];
 
   return (
     <div className="min-h-screen bg-slate-50/60 flex flex-col justify-between items-center p-6 font-sans">
-
       <div className="w-full flex flex-col items-center my-auto">
-
         <div className="flex items-center gap-2 mb-6 bg-white shadow-sm border border-gray-100 px-4 py-2 rounded-xl">
           <div className="w-7 h-7 bg-[#1A365D] text-white flex items-center justify-center rounded-md font-bold text-sm">
             <Building2 className="w-4 h-4" />
           </div>
-
           <span className="text-sm font-bold text-[#1A365D]">
             InitialCorps Legal
           </span>
@@ -131,12 +125,14 @@ export default function Welcome({ onSelectRole }) {
               buttonText={card.buttonText}
               buttonColorClass={card.buttonColorClass}
               onCardClick={() => {
-              if (card.id === "user") {
-                 navigate("/login");
-               } else {
-              onSelectRole && onSelectRole(card.id);
-  }
-}}
+                if (card.id === "user") {
+                  navigate("/login");
+                } else if (card.id === "executive") {
+                  navigate("/executive"); // Routes directly to the gated Executive Layout
+                } else {
+                  onSelectRole && onSelectRole(card.id);
+                }
+              }}
             />
           ))}
         </div>
@@ -147,12 +143,10 @@ export default function Welcome({ onSelectRole }) {
           <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
           All connections are encrypted & secured
         </div>
-
         <div>
           © 2026 InitialCorps Legal. All rights reserved.
         </div>
       </div>
-
     </div>
   );
 }

@@ -19,7 +19,7 @@ export default function UserDashboard() {
 
   const handleNav = (link) => {
     if (link.action === "home") {
-      navigate("/");
+      navigate("ServicesPage");
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
