@@ -61,7 +61,7 @@ const PremiumCard = ({ title, subtitle, price, duration, features, popular }) =>
 
       <div className="flex items-end justify-between">
         <div>
-          <h2 className="text-3xl font-extrabold text-amber-600">{price}</h2>
+          <h2 className="text-3xl font-bold text-amber-600">{price}</h2>
           <p className="flex items-center gap-1 text-xs text-slate-400 mt-1.5">
             <Clock size={13} /> {duration}
           </p>
