@@ -3,7 +3,7 @@ import { useParams, Link, Navigate } from "react-router-dom";
 import {
   Building2, PenLine, Award, Receipt, ClipboardCheck,
   ScrollText, FileText, Rocket, TrendingUp,
-  CheckCircle2, Clock, Sparkles, Phone, Mail, Send, MessageCircle, Crown
+  CheckCircle2, Clock, Sparkles, Phone, Mail, Send, MessageCircle
 } from "lucide-react";
 import { basicServices } from "./BasicServices";
 import { premiumServices } from "./PremiumServices";
@@ -35,6 +35,10 @@ const ServiceDetail = ({ plan }) => {
   const [category, setCategory] = useState("All");
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
+  
+  // Added states for API handling
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const services = plan === "premium" ? premiumServices : basicServices;
   const service = services.find((s) => toSlug(s.title) === slug);
@@ -49,7 +53,38 @@ const ServiceDetail = ({ plan }) => {
   const filtered = category === "All" ? services : services.filter((s) => s.category === category);
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
-  const handleSubmit = (e) => { e.preventDefault(); setSubmitted(true); };
+  
+  // Updated to interact with the backend callback API
+  const handleSubmit = async (e) => { 
+    e.preventDefault(); 
+    setIsSubmitting(true);
+    setSubmitError("");
+
+    try {
+      const response = await fetch("http://localhost:5000/api/callbacks", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...form,
+          planType: plan,           // Passes 'basic' or 'premium'
+          serviceName: service.title // Passes the active service name
+        })
+      });
+
+      if (response.ok) {
+        setSubmitted(true);
+        setForm({ name: "", email: "", phone: "", message: "" }); // Clear form on success
+      } else {
+        const data = await response.json();
+        setSubmitError(data.message || "Something went wrong. Please try again.");
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+      setSubmitError("Network error. Please check your connection.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr_320px] gap-6 items-start">
@@ -174,7 +209,7 @@ const ServiceDetail = ({ plan }) => {
           <p className="text-xs text-slate-500 mt-1 mb-5">Our expert will contact you within 2 business hours</p>
 
           {submitted ? (
-            <p className="text-sm text-slate-600 bg-slate-50 border border-slate-200 rounded-xl p-4">
+            <p className="text-sm text-green-700 bg-green-50 border border-green-200 rounded-xl p-4">
               Thanks — your request has been received. We'll be in touch shortly.
             </p>
           ) : (
@@ -205,8 +240,22 @@ const ServiceDetail = ({ plan }) => {
                 />
               </div>
 
-              <button type="submit" className={`w-full flex items-center justify-center gap-2 text-white rounded-xl py-3 text-sm font-semibold hover:opacity-90 transition-opacity ${accent.btn}`}>
-                <Send size={15} /> Submit Request
+              {submitError && (
+                <p className="text-xs text-red-600 bg-red-50 p-2 rounded-lg">{submitError}</p>
+              )}
+
+              <button 
+                type="submit" 
+                disabled={isSubmitting}
+                className={`w-full flex items-center justify-center gap-2 text-white rounded-xl py-3 text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-70 ${accent.btn}`}
+              >
+                {isSubmitting ? (
+                  "Submitting..."
+                ) : (
+                  <>
+                    <Send size={15} /> Submit Request
+                  </>
+                )}
               </button>
 
               <p className="text-[11px] text-slate-400 text-center">
